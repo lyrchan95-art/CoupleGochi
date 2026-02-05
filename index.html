@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BondPets - Couples Tamagotchi App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial Rounded MT Bold', 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #ffecf1;
+            background-image: radial-gradient(#ffb6c1 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: #5a4fcf;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff9ebb, #a66cff);
+            border-radius: 25px;
+            color: white;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(166, 108, 255, 0.3);
+            border: 5px solid white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: float 20s linear infinite;
+            z-index: 0;
+        }
+        
+        @keyframes float {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .tagline {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hearts {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 1.5rem;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .panel {
+            background-color: white;
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 5px solid #ffccd5;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .panel::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(90deg, #ff9ebb, #a66cff, #ff9ebb);
+        }
+        
+        .pet-section {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+        
+        .pet-visual {
+            background: linear-gradient(135deg, #ffd6e7, #e0c3fc);
+            border-radius: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            min-height: 400px;
+            border: 8px solid #ff9ebb;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pet-visual::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: #c8f7c5;
+            border-radius: 0 0 17px 17px;
+        }
+        
+        .pet-name {
+            font-size: 2rem;
+            color: #ff6b9d;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 0 white;
+            background: white;
+            padding: 5px 20px;
+            border-radius: 50px;
+            border: 3px dashed #ff6b9d;
+        }
+        
+        .pet-container {
+            position: relative;
+            margin: 20px 0;
+            width: 200px;
+            height: 200px;
+        }
+        
+        .pet-body {
+            width: 180px;
+            height: 180px;
+            background-color: #ffccd5;
+            border-radius: 45% 45% 45% 45% / 50% 50% 50% 50%;
+            position: relative;
+            box-shadow: 
+                inset 0 -10px 0 rgba(255, 107, 157, 0.2),
+                0 10px 25px rgba(0,0,0,0.15);
+            animation: bounce 2s infinite alternate;
+            border: 8px solid #ff9ebb;
+        }
+        
+        @keyframes bounce {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-10px); }
+        }
+        
+        .pet-face {
+            position: absolute;
+            top: 50px;
+            left: 45px;
+            width: 90px;
+            height: 90px;
+        }
+        
+        .pet-eye {
+            width: 20px;
+            height: 20px;
+            background-color: #333;
+            border-radius: 50%;
+            position: absolute;
+            top: 20px;
+            border: 4px solid white;
+            box-shadow: 0 0 0 3px #ff6b9d;
+        }
+        
+        .pet-eye-left {
+            left: 15px;
+        }
+        
+        .pet-eye-right {
+            right: 15px;
+        }
+        
+        .pet-eye::after {
+            content: "";
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: white;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+        }
+        
+        .pet-mouth {
+            width: 40px;
+            height: 20px;
+            border-radius: 0 0 20px 20px;
+            background-color: #ff4d6d;
+            position: absolute;
+            bottom: 10px;
+            left: 25px;
+            border: 3px solid #ff1e56;
+            box-shadow: inset 0 5px 0 rgba(255,255,255,0.3);
+        }
+        
+        .pet-blush {
+            width: 20px;
+            height: 10px;
+            background-color: rgba(255, 107, 157, 0.3);
+            border-radius: 50%;
+            position: absolute;
+            top: 45px;
+        }
+        
+        .pet-blush-left {
+            left: 5px;
+        }
+        
+        .pet-blush-right {
+            right: 5px;
+        }
+        
+        .pet-ears {
+            position: absolute;
+            top: -20px;
+            left: 30px;
+            width: 120px;
+            height: 40px;
+        }
+        
+        .pet-ear {
+            width: 40px;
+            height: 60px;
+            background-color: #ffccd5;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            border: 8px solid #ff9ebb;
+        }
+        
+        .pet-ear-left {
+            left: 0;
+            transform: rotate(-20deg);
+        }
+        
+        .pet-ear-right {
+            right: 0;
+            transform: rotate(20deg);
+        }
+        
+        .pet-heart {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            color: #ff6b9d;
+            animation: floatHeart 3s ease-in-out infinite;
+        }
+        
+        @keyframes floatHeart {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-10px) scale(1.1); }
+        }
+        
+        .pet-status {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-top: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 20px;
+            border: 3px solid #ff9ebb;
+        }
+        
+        .status-meter {
+            text-align: center;
+        }
+        
+        .meter-label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #5a4fcf;
+        }
+        
+        .meter-bar {
+            width: 100px;
+            height: 20px;
+            background-color: #f0e6ff;
+            border-radius: 10px;
+            margin: 5px auto;
+            overflow: hidden;
+            border: 3px solid #e0c3fc;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .meter-fill {
+            height: 100%;
+            border-radius: 7px;
+            width: 70%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .meter-fill::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shine 2s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .meter-fill.health {
+            background: linear-gradient(90deg, #4cc9f0, #6bd4ff);
+            width: 70%;
+        }
+        
+        .meter-fill.happiness {
+            background: linear-gradient(90deg, #ffd166, #ffe08a);
+            width: 85%;
+        }
+        
+        .meter-fill.bond {
+            background: linear-gradient(90deg, #ff6b9d, #ff9ebb);
+            width: 60%;
+        }
+        
+        .meter-value {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 5px;
+        }
+        
+        h2 {
+            color: #5a4fcf;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px dotted #e0c3fc;
+            font-size: 1.8rem;
+        }
+        
+        h3 {
+            color: #7b6cf6;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .currency-display {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 25px;
+            gap: 15px;
+        }
+        
+        .currency-box {
+            background: linear-gradient(135deg, #f0e6ff, #e0c3fc);
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            flex: 1;
+            border: 3px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .currency-box:hover {
+            transform: translateY(-5px);
+        }
+        
+        .currency-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #5a4fcf;
+            text-shadow: 2px 2px 0 white;
+        }
+        
+        .currency-label {
+            font-size: 1rem;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        .task-list {
+            list-style-type: none;
+            margin-bottom: 20px;
+        }
+        
+        .task-item {
+            background: linear-gradient(135deg, #f9f5ff, #f0e6ff);
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px solid white;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+        
+        .task-item:hover {
+            transform: translateX(5px);
+            background: linear-gradient(135deg, #f0e6ff, #e0c3fc);
+        }
+        
+        .task-item i {
+            color: #ff6b9d;
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .task-points {
+            background: linear-gradient(135deg, #5a4fcf, #7b6cf6);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            box-shadow: 0 3px 0 rgba(0,0,0,0.1);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #7b6cf6, #5a4fcf);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            box-shadow: 0 5px 0 rgba(90, 79, 207, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+        }
+        
+        .btn:hover::after {
+            animation: slide 0.6s;
+        }
+        
+        @keyframes slide {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 0 rgba(90, 79, 207, 0.5);
+        }
+        
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 3px 0 rgba(90, 79, 207, 0.5);
+        }
+        
+        .btn i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .btn-small {
+            padding: 10px 20px;
+            font-size: 1rem;
+        }
+        
+        .acts-log {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            background: #f9f5ff;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px solid #e0c3fc;
+        }
+        
+        .log-item {
+            padding: 12px;
+            border-bottom: 2px dotted #e0c3fc;
+            font-size: 0.95rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .log-item:last-child {
+            border-bottom: none;
+        }
+        
+        .log-item .points {
+            color: #ff6b9d;
+            font-weight: bold;
+            background: #ffe6ee;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .partner-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            background: #f9f5ff;
+            padding: 15px;
+            border-radius: 15px;
+            border: 3px solid white;
+        }
+        
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 1.5rem;
+            border: 4px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .avatar-1 {
+            background: linear-gradient(135deg, #4cc9f0, #6bd4ff);
+        }
+        
+        .avatar-2 {
+            background: linear-gradient(135deg, #ff6b9d, #ff9ebb);
+        }
+        
+        .footer-note {
+            text-align: center;
+            margin-top: 30px;
+            padding: 25px;
+            border-top: 5px dotted #ff9ebb;
+            color: #888;
+            font-size: 0.95rem;
+            background: white;
+            border-radius: 20px;
+            border: 3px solid #ffccd5;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #4cd97b, #3cb464);
+            box-shadow: 0 5px 0 rgba(60, 180, 100, 0.5);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #ffd166, #ffb347);
+            box-shadow: 0 5px 0 rgba(255, 179, 71, 0.5);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b9d, #ff4d6d);
+            box-shadow: 0 5px 0 rgba(255, 77, 109, 0.5);
+        }
+        
+        .btn-success:hover {
+            box-shadow: 0 8px 0 rgba(60, 180, 100, 0.5);
+        }
+        
+        .btn-warning:hover {
+            box-shadow: 0 8px 0 rgba(255, 179, 71, 0.5);
+        }
+        
+        .btn-danger:hover {
+            box-shadow: 0 8px 0 rgba(255, 77, 109, 0.5);
+        }
+        
+        .pet-message {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 20px;
+            text-align: center;
+            font-style: italic;
+            border: 3px dashed #ff9ebb;
+            position: relative;
+        }
+        
+        .pet-message::before {
+            content: "💬";
+            position: absolute;
+            left: -15px;
+            top: -15px;
+            font-size: 1.5rem;
+            background: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #ff9ebb;
+        }
+        
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .pet-section {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .currency-display {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="hearts">❤️❤️❤️</div>
+        <h1><i class="fas fa-heart"></i> BondPets <i class="fas fa-heart"></i></h1>
+        <p class="tagline">Nurture your pet, nurture your relationship</p>
+    </header>
+    
+    <div class="app-container">
+        <div class="pet-section panel">
+            <div class="pet-visual">
+                <div class="pet-name">Fluffball</div>
+                <div class="pet-container">
+                    <div class="pet-ears">
+                        <div class="pet-ear pet-ear-left"></div>
+                        <div class="pet-ear pet-ear-right"></div>
+                    </div>
+                    <div class="pet-body">
+                        <div class="pet-face">
+                            <div class="pet-blush pet-blush-left"></div>
+                            <div class="pet-blush pet-blush-right"></div>
+                            <div class="pet-eye pet-eye-left"></div>
+                            <div class="pet-eye pet-eye-right"></div>
+                            <div class="pet-mouth"></div>
+                        </div>
+                    </div>
+                    <div class="pet-heart">❤️</div>
+                </div>
+                <div class="pet-status">
+                    <div class="status-meter">
+                        <div class="meter-label">Health</div>
+                        <div class="meter-bar">
+                            <div class="meter-fill health" id="health-meter"></div>
+                        </div>
+                        <div class="meter-value">70%</div>
+                    </div>
+                    <div class="status-meter">
+                        <div class="meter-label">Happiness</div>
+                        <div class="meter-bar">
+                            <div class="meter-fill happiness" id="happiness-meter"></div>
+                        </div>
+                        <div class="meter-value">85%</div>
+                    </div>
+                    <div class="status-meter">
+                        <div class="meter-label">Bond</div>
+                        <div class="meter-bar">
+                            <div class="meter-fill bond" id="bond-meter"></div>
+                        </div>
+                        <div class="meter-value">60%</div>
+                    </div>
+                </div>
+                <div class="pet-message" id="pet-message">
+                    "I'm hungry! Feed me please! 🍎"
+                </div>
+            </div>
+            
+            <div class="pet-info">
+                <h2>Pet Care Activities</h2>
+                <p style="margin-bottom: 20px; font-size: 1.1rem;">Complete these activities together to care for your pet and earn relationship points!</p>
+                
+                <ul class="task-list">
+                    <li class="task-item" onclick="window.location.href='feedpet.html'">
+                        <span><i class="fas fa-utensils"></i> Feed your pet</span>
+                        <span class="task-points">+10 pts each</span>
+                    </li>
+                    <li class="task-item" onclick="window.location.href='playtogether.html'">
+                        <span><i class="fas fa-gamepad"></i> Play mini-game together</span>
+                        <span class="task-points">+15 pts each</span>
+                    </li>
+                    <li class="task-item" onclick="window.location.href='groompet.html'">
+                        <span><i class="fas fa-bath"></i> Groom your pet</span>
+                        <span class="task-points">+8 pts each</span>
+                    </li>
+                    <li class="task-item">
+                        <span><i class="fas fa-bed"></i> Put pet to sleep</span>
+                        <span class="task-points">+5 pts each</span>
+                    </li>
+                    <li class="task-item">
+                        <span><i class="fas fa-stethoscope"></i> Health check-up</span>
+                        <span class="task-points">+12 pts each</span>
+                    </li>
+                    <li class="task-item">
+                        <span><i class="fas fa-book"></i> Teach pet a trick</span>
+                        <span class="task-points">+20 pts each</span>
+                    </li>
+                </ul>
+                
+                <div class="action-buttons">
+                    <a href="feedpet.html" class="btn btn-success">
+                        <i class="fas fa-utensils"></i> Feed Pet
+                    </a>
+                    <a href="playtogether.html" class="btn btn-warning">
+                        <i class="fas fa-gamepad"></i> Play Together
+                    </a>
+                    <a href="groompet.html" class="btn">
+                        <i class="fas fa-bath"></i> Groom Pet
+                    </a>
+                     <a href="growth.html" class="btn">
+                        <i class="fas fa-bath"></i> Growth Journey
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel">
+            <h2><i class="fas fa-coins"></i> Relationship Currency</h2>
+            <p style="margin-bottom: 20px; font-size: 1.1rem;">Earn points through acts of service and spend them on rewards.</p>
+            
+            <div class="currency-display">
+                <div class="currency-box">
+                    <div class="currency-value" id="user-points">145</div>
+                    <div class="currency-label">Your Points</div>
+                </div>
+                <div class="currency-box">
+                    <div class="currency-value" id="partner-points">210</div>
+                    <div class="currency-label">Partner's Points</div>
+                </div>
+                <div class="currency-box">
+                    <div class="currency-value" id="shared-points">355</div>
+                    <div class="currency-label">Shared Points</div>
+                </div>
+            </div>
+            
+            <h3><i class="fas fa-history"></i> Recent Acts of Service</h3>
+            <div class="acts-log">
+                <div class="log-item">
+                    <span><strong>Alex</strong> made breakfast in bed</span>
+                    <span class="points">+25 pts</span>
+                </div>
+                <div class="log-item">
+                    <span><strong>Jordan</strong> took care of laundry</span>
+                    <span class="points">+15 pts</span>
+                </div>
+                <div class="log-item">
+                    <span><strong>Alex</strong> planned a surprise date</span>
+                    <span class="points">+30 pts</span>
+                </div>
+                <div class="log-item">
+                    <span><strong>Jordan</strong> gave a massage</span>
+                    <span class="points">+20 pts</span>
+                </div>
+                <div class="log-item">
+                    <span><strong>Both</strong> cleaned the apartment</span>
+                    <span class="points">+20 pts each</span>
+                </div>
+            </div>
+            
+            <button class="btn" id="log-act-btn">
+                <i class="fas fa-plus-circle"></i> Log Act of Service
+            </button>
+        </div>
+        
+        <div class="panel">
+            <h2><i class="fas fa-users"></i> Couple Dashboard</h2>
+            
+            <div class="partner-info">
+                <div class="avatar avatar-1">A</div>
+                <div>
+                    <h3>Alex</h3>
+                    <p>Logged 5 acts this week • 145 points</p>
+                </div>
+            </div>
+            
+            <div class="partner-info">
+                <div class="avatar avatar-2">J</div>
+                <div>
+                    <h3>Jordan</h3>
+                    <p>Logged 4 acts this week • 210 points</p>
+                </div>
+            </div>
+            
+            <h3><i class="fas fa-gift"></i> Available Rewards</h3>
+            <p style="margin-bottom: 15px; font-size: 1.1rem;">Spend your points on special rewards for each other.</p>
+            
+            <ul class="task-list">
+                <li class="task-item">
+                    <span><i class="fas fa-mug-hot"></i> Breakfast in bed coupon</span>
+                    <span class="task-points">50 pts</span>
+                </li>
+                <li class="task-item">
+                    <span><i class="fas fa-film"></i> Movie night of choice</span>
+                    <span class="task-points">75 pts</span>
+                </li>
+                <li class="task-item">
+                    <span><i class="fas fa-gift"></i> Surprise gift</span>
+                    <span class="task-points">100 pts</span>
+                </li>
+                <li class="task-item">
+                    <span><i class="fas fa-tshirt"></i> Partner's chore for a day</span>
+                    <span class="task-points">150 pts</span>
+                </li>
+            </ul>
+            
+            <div class="action-buttons">
+                <button class="btn btn-small" id="reward-btn">
+                    <i class="fas fa-gift"></i> Claim Reward
+                </button>
+                <button class="btn btn-small" id="date-btn">
+                    <i class="fas fa-calendar-alt"></i> Plan Date
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer-note">
+        <p><i class="fas fa-heart" style="color:#ff6b9d;"></i> BondPets: Strengthening relationships through shared care and appreciation.</p>
+        <p style="margin-top: 10px;">This is a prototype. In a full app, all interactions would sync between partners in real-time.</p>
+    </div>
+
+    <script>
+        // Pet status variables
+        let health = 70;
+        let happiness = 85;
+        let bond = 60;
+        
+        // Currency variables
+        let userPoints = 145;
+        let partnerPoints = 210;
+        let sharedPoints = 355;
+        
+        // DOM Elements
+        const healthMeter = document.getElementById('health-meter');
+        const happinessMeter = document.getElementById('happiness-meter');
+        const bondMeter = document.getElementById('bond-meter');
+        const petMessage = document.getElementById('pet-message');
+        
+        const userPointsEl = document.getElementById('user-points');
+        const partnerPointsEl = document.getElementById('partner-points');
+        const sharedPointsEl = document.getElementById('shared-points');
+        
+        // Pet messages based on status
+        const petMessages = [
+            { condition: () => health < 30, message: "I'm feeling sick! Please take care of me! 🤒" },
+            { condition: () => health < 50, message: "I need some food! I'm getting weak! 🍎" },
+            { condition: () => happiness < 30, message: "I'm so bored! Play with me! 🎮" },
+            { condition: () => happiness < 50, message: "Let's do something fun together! 🎯" },
+            { condition: () => bond < 30, message: "I miss when you spend time together with me! 👫" },
+            { condition: () => bond < 50, message: "I love when you care for me together! 💕" },
+            { condition: () => health > 80 && happiness > 80, message: "I feel amazing! Thank you for taking such good care of me! ✨" },
+            { condition: () => true, message: "I'm hungry! Feed me please! 🍎" }
+        ];
+        
+        // Update meter displays
+        function updateMeters() {
+            healthMeter.style.width = health + '%';
+            happinessMeter.style.width = happiness + '%';
+            bondMeter.style.width = bond + '%';
+            
+            // Update the text values next to meters
+            document.querySelectorAll('.meter-value')[0].textContent = health + '%';
+            document.querySelectorAll('.meter-value')[1].textContent = happiness + '%';
+            document.querySelectorAll('.meter-value')[2].textContent = bond + '%';
+            
+            // Update pet message
+            updatePetMessage();
+        }
+        
+        // Update pet message based on status
+        function updatePetMessage() {
+            for (const msg of petMessages) {
+                if (msg.condition()) {
+                    petMessage.textContent = msg.message;
+                    break;
+                }
+            }
+        }
+        
+        // Update currency displays
+        function updateCurrency() {
+            userPointsEl.textContent = userPoints;
+            partnerPointsEl.textContent = partnerPoints;
+            sharedPointsEl.textContent = sharedPoints;
+        }
+        
+        // Log act of service
+        document.getElementById('log-act-btn').addEventListener('click', function() {
+            const acts = [
+                "made breakfast in bed",
+                "did the dishes",
+                "planned a surprise date",
+                "gave a massage",
+                "took out the trash",
+                "wrote a love note",
+                "handled morning routine"
+            ];
+            
+            const randomAct = acts[Math.floor(Math.random() * acts.length)];
+            const points = Math.floor(Math.random() * 20) + 10;
+            
+            userPoints += points;
+            sharedPoints += points;
+            updateCurrency();
+            
+            // Add to log
+            const log = document.querySelector('.acts-log');
+            const logItem = document.createElement('div');
+            logItem.className = 'log-item';
+            logItem.innerHTML = `<span><strong>You</strong> ${randomAct}</span><span class="points">+${points} pts</span>`;
+            log.insertBefore(logItem, log.firstChild);
+            
+            // Show confirmation
+            showNotification(`You logged: "${randomAct}" for +${points} points!`);
+        });
+        
+        // Claim reward
+        document.getElementById('reward-btn').addEventListener('click', function() {
+            if (userPoints < 50) {
+                showNotification('You need at least 50 points to claim a reward!', 'warning');
+                return;
+            }
+            
+            const reward = prompt("Enter reward you'd like to claim (e.g., 'breakfast in bed'):");
+            if (reward) {
+                userPoints -= 50;
+                sharedPoints -= 50;
+                updateCurrency();
+                showNotification(`You claimed: "${reward}" for 50 points! Tell your partner about your reward.`, 'success');
+            }
+        });
+        
+        // Plan date
+        document.getElementById('date-btn').addEventListener('click', function() {
+            const dateIdeas = [
+                "Romantic dinner at home 🍽️",
+                "Movie marathon night 🎬",
+                "Picnic in the park 🌳",
+                "Cooking class together 👩‍🍳",
+                "Stargazing evening 🌟",
+                "Museum visit 🖼️",
+                "Hiking adventure 🥾"
+            ];
+            
+            const randomDate = dateIdeas[Math.floor(Math.random() * dateIdeas.length)];
+            showNotification(`Date idea: ${randomDate}\n\nSchedule this in the app to earn bonus points when you complete it!`, 'info');
+        });
+        
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                background: ${type === 'warning' ? '#ffd166' : type === 'success' ? '#4cd97b' : '#7b6cf6'};
+                color: white;
+                border-radius: 15px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 1000;
+                animation: slideIn 0.3s ease-out;
+                font-weight: bold;
+                border: 3px solid white;
+                max-width: 300px;
+            `;
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-in';
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+        
+        // Add CSS for notification animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Initialize displays
+        updateMeters();
+        updateCurrency();
+        
+        // Simulate pet needs decreasing over time
+        setInterval(function() {
+            health = Math.max(0, health - 1);
+            happiness = Math.max(0, happiness - 2);
+            bond = Math.max(0, bond - 0.5);
+            updateMeters();
+        }, 30000); // Every 30 seconds
+    </script>
+</body>
+</html>
